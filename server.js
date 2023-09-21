@@ -2,14 +2,14 @@ const http = require('http');
 const url = require('url');
 const https = require('https');
 
-const server = http.createServer((req, res) => {
-  // 解析请求中的URL参数
-  //const query = url.parse(req.url, true).query;
-  //const urlParam = query.url;
+function handleError(res) {
+  res.writeHead(404, {'Content-Type': 'text/plain'});
+  res.end('404 Not Found');
+}
 
-  const urlParam = 'https://raw.githubusercontent.com/aiboboxx/v2rayfree/main/v2';
+function handleTransport(req, res, targetUrl) {
   // 向网址发送GET请求
-  https.get(urlParam, (response) => {
+  https.get(targetUrl, (response) => {
     let body = '';
     response.on('data', (chunk) => {
       body += chunk;
@@ -22,6 +22,20 @@ const server = http.createServer((req, res) => {
   }).on('error', (e) => {
     console.error(e);
   });
+});
+
+const server = http.createServer((req, res) => {
+  // 解析请求的URL
+  const parsedUrl = url.parse(req.url, true);
+  const path = parsedUrl.pathname;
+  const query = parsedUrl.query;
+  const urlParam = query.url;
+
+  if (path == '/transport') {
+    handleTransport(req, res, urlParam);
+  } else {
+    handleError(res);
+  }
 });
 
 server.listen(3000, () => {
