@@ -22,7 +22,7 @@ function handleTransport(req, res, targetUrl) {
   }).on('error', (e) => {
     console.error(e);
   });
-});
+}
 
 const server = http.createServer((req, res) => {
   // 解析请求的URL
