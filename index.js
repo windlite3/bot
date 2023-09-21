@@ -20,9 +20,9 @@ function handleTransport(req, res, targetUrl) {
     headers: req.headers
   };
 
-  //console.log("----------------------");
-  //console.log(targetUrl);
-  //console.log(req.headers);
+  console.log("----------------------");
+  console.log(targetUrl);
+  console.log(req.headers);
 
   const forwardReq = https.request(options, forwardRes => {
     let stream;
@@ -46,18 +46,18 @@ function handleTransport(req, res, targetUrl) {
     // 接收转发请求的响应数据
     let responseData = '';
     stream.on('data', chunk => {
-      //console.log("length:" + chunk.length + ', encoding: ' + encoding);
+      console.log("length:" + chunk.length + ', encoding: ' + encoding);
       responseData += chunk;
     });
     stream.on('end', () => {
       // 返回响应数据
       //resHeaders = {'Content-Type': forwardRes.headers['content-type'], 'Accept-Encoding': forwardRes.headers['content-encoding']};
       resHeaders = {'Content-Type': forwardRes.headers['content-type']};
-      //console.log(resHeaders);
-      //console.log("end");
+      console.log(resHeaders);
+      console.log("end");
       delete forwardRes.headers['set-cookie']
       delete forwardRes.headers['transfer-encoding']
-      //console.log(forwardRes.headers);
+      console.log(forwardRes.headers);
       res.writeHead(200, resHeaders);
       //res.writeHead(forwardRes.statusCode, forwardRes.headers);
       res.end(responseData);
