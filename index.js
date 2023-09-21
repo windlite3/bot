@@ -12,6 +12,20 @@ function handleError(res) {
 
 function handleTransport(req, res, targetUrl) {
   delete req.headers.host;
+  delete req.headers['x-forwarded-for']
+  delete req.headers['x-forwarded-port']
+  delete req.headers['x-forwarded-proto']
+  delete req.headers['upgrade-insecure-requests']
+
+  delete req.headers['sec-fetch-dest']
+  delete req.headers['sec-fetch-mode']
+  delete req.headers['sec-fetch-site']
+  delete req.headers['sec-fetch-user']
+
+  delete req.headers['sec-ch-ua']
+  delete req.headers['sec-ch-ua-mobile']
+  delete req.headers['sec-ch-ua-platform']
+
 
   // 发起转发请求
   const options = {
