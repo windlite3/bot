@@ -12,8 +12,20 @@ function handleOK(res) {
   res.end('OK');
 }
 
+function getIP(req) {
+  let ip = req.ip ?? req.headers["x-real-ip"];
+  const forwardedFor = req.headers["x-forwarded-for"];
+
+  if (!ip && forwardedFor) {
+    ip = forwardedFor.split(",").at(0) ?? "";
+  }
+
+  ip = ip ?? "";
+  return ip;
+}
+
 function handleIP(req, res) {
-  const ip = req.socket.remoteAddress;
+  const ip = getIP(req);
   const response = { ip };
   res.setHeader('Content-Type', 'application/json');
   res.end(JSON.stringify(response));
