@@ -7,6 +7,18 @@ function handleError(res) {
   res.end('404 Not Found');
 }
 
+function handleOK(res) {
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.end('OK');
+}
+
+function handleIP(req, res) {
+  const ip = req.socket.remoteAddress;
+  const response = { ip };
+  res.setHeader('Content-Type', 'application/json');
+  res.end(JSON.stringify(response));
+}
+
 function handleTransport(req, res, targetUrl) {
   // 向网址发送GET请求
   https.get(targetUrl, (response) => {
@@ -33,6 +45,10 @@ const server = http.createServer((req, res) => {
 
   if (path == '/transport') {
     handleTransport(req, res, urlParam);
+  } else if (path == '/') {
+    handleOK(res);
+  } else if (path == '/ip') {
+    handleIP(req, res);
   } else {
     handleError(res);
   }
